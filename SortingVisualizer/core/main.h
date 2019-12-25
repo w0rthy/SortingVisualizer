@@ -1,0 +1,8 @@
+#pragma once
+
+#define MODE_SORTCHECK 0
+#define MODE_VISUALIZER 1
+#define MODE_BENCHMARK 2
+#define MODE_PROFILER 3
+
+#define MODE MODE_VISUALIZER
