@@ -22,8 +22,8 @@ struct Visualizer {
 	virtual void resize(int w, int h, float aspect) {}
 
 	void resize_(int w, int h, float aspect) {
-		glUniform1i(uniformLocation("scrw"), w);
-		glUniform1i(uniformLocation("scrh"), h);
+		//glUniform1i(uniformLocation("scrw"), w);
+		//glUniform1i(uniformLocation("scrh"), h);
 		resize(w, h, aspect);
 	}
 

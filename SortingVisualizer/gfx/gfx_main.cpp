@@ -9,6 +9,7 @@
 #include "fwk/gfx_fwk_font.h"
 
 #define FORCE_PERFECT_ASPECT 0
+#define AA_MULTISAMPLES 16
 
 int scrw, scrh;
 float scraspect;
@@ -29,6 +30,8 @@ void gfx_resize(GLFWwindow* win, int w, int h) {
 void gfx_init(int w, int h, string title) {
 
 	glfwInit();
+	//Set number of samples per pixel
+	glfwWindowHint(GLFW_SAMPLES, AA_MULTISAMPLES);
 
 	GLFWwindow* win = glfwCreateWindow(w, h, title, 0, 0);
 	glfwMakeContextCurrent(win);
@@ -48,6 +51,7 @@ void gfx_init(int w, int h, string title) {
 	glfwSetFramebufferSizeCallback(win, gfx_resize);
 	gfx_resize(win, w, h);
 	
+	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_CULL_FACE);

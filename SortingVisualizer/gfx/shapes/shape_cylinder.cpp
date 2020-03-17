@@ -1,7 +1,7 @@
 #include "shapes.h"
 #if GFX_ENABLED
 
-#define STEPS 20
+#define STEPS 30
 
 namespace {
 	struct _ : public Shape {

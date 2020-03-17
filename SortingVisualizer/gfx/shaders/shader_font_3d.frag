@@ -1,22 +1,21 @@
 string frag = "#version 330 core\n\
 \
 uniform sampler2D tex;\
-\
 uniform vec4 color;\
 \
-uniform int scrw;\
-uniform int scrh;\
-\
-in vec2 texPos;\
 in vec3 normal_frag;\
+in vec3 view_frag;\
+in vec2 texPos;\
+\
+const float ambientAmt = 0.1f;\
+const float diffuseAmt = 1.f-ambientAmt;\
+const float specAmt = 1.f;\
+const float specStrength = 128.f;\
 \
 void main(){\
-	vec3 fragPos = vec3(gl_FragCoord)/vec3(scrw*0.5f,scrh*0.5f,1.f) - vec3(1.f,1.f,0.f);\
-	vec3 fragVec = normalize(fragPos);\
-	float err = degrees(acos(dot(fragVec,normal_frag)))/90.f;\
-	float color_mul = 1.f - err*0.5f;\
-	\
-	vec4 texVal = vec4(1.f, 1.f, 1.f, texture(tex, texPos).r);\
-	\
-    gl_FragColor = vec4(color[0]*color_mul,color[1]*color_mul,color[2]*color_mul,color[3])*texVal;\
+	float dotRes = max(dot(normal_frag,view_frag),0.f);\
+	gl_FragColor = color*ambientAmt;\
+	gl_FragColor += color*diffuseAmt*dotRes;\
+	gl_FragColor += vec4(1.f,1.f,1.f,0.f)*specAmt*pow(dotRes,specStrength);\
+	gl_FragColor[3] = color[3]*texture(tex, texPos).r;\
 }";

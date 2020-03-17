@@ -69,7 +69,7 @@ static int aud_synthesize(const void* bufferIn, void* bufferOut, unsigned long b
 	count = 0;
 	int ibsz = interBuffer.size();
 	if (ibsz >= AUD_MIN_VIRTUAL_STREAMS) {
-		for (; count < ibsz; count++) {
+		for (; count < ibsz && count < AUD_MAX_NOTES_PER_TICK; count++) {
 			auto& e = interBuffer[count];
 			auto& strm = streams[count % AUD_MAX_VIRTUAL_STREAMS];
 			if (count / AUD_MAX_VIRTUAL_STREAMS == 0) {
@@ -101,8 +101,6 @@ static int aud_synthesize(const void* bufferIn, void* bufferOut, unsigned long b
 	if (count > 0)
 		sz += numstreams;
 
-	//printf("cnt,sz,strms: %d %d %d\n", count,sz,numstreams);
-
 	float mul = aud_volume / (float)numstreams;
 
 	float bigstep = ceilf((float)(sz-numstreams) / (float)numstreams) / (float)bufferSz;
@@ -128,8 +126,6 @@ static int aud_synthesize(const void* bufferIn, void* bufferOut, unsigned long b
 			if(j==stepdet)
 				pos = smlpos, bias = smlbias, lbias = smllbias;
 			float& t = tvec[j];
-			if ((int)pos + 1 >= streams[j].size())
-				printf("help\n");
 			AudBufferResult& e1 = streams[j][(int)pos], & e2 = streams[j][(int)pos+1];
 			float tstep = e1.tstep * lbias + e2.tstep * bias;
 

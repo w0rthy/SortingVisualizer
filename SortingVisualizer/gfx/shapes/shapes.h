@@ -14,4 +14,6 @@ extern Shape* shape_cone;
 
 extern Shape* shape_cylinder;
 
+extern Shape* shape_ring;
+
 #endif

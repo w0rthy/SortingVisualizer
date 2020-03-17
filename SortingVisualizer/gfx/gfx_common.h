@@ -34,6 +34,17 @@ struct vertexVector : public vector<float> {
 			push_back(v);
 		return *this;
 	}
+
+	inline void flipLastTri() {
+		int pos = size();
+		int i;
+		for (i = 9; i >= 7; i--)
+			push_back(at(pos - i));
+		for (i = 3; i >= 1; i--)
+			push_back(at(pos - i));
+		for (i = 6; i >= 4; i--)
+			push_back(at(pos - i));
+	}
 };
 
 struct mat4 : public glm::mat4 {

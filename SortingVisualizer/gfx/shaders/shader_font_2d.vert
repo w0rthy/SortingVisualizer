@@ -10,8 +10,6 @@ uniform mat4 projection;\
 out vec2 texPos;\
 \
 void main(){\
-	mat4 MVP = projection*view*model;\
-	\
 	texPos = vec2(position.x+0.5f,-position.y+0.5f);\
 	gl_Position = model * vec4(position, 1.0f);\
 }";
