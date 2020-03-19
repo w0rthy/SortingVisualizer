@@ -68,8 +68,21 @@ static int aud_synthesize(const void* bufferIn, void* bufferOut, unsigned long b
 #if AUD_USE_INTER_BUFFER
 	count = 0;
 	int ibsz = interBuffer.size();
+	ibsz = AUD_MAX_NOTES_PER_TICK < ibsz ? AUD_MAX_NOTES_PER_TICK : ibsz;
+
 	if (ibsz >= AUD_MIN_VIRTUAL_STREAMS) {
-		for (; count < ibsz && count < AUD_MAX_NOTES_PER_TICK; count++) {
+
+#if AUD_ORDER_STREAMS_BY_PITCH
+		for (; count < ibsz; count += AUD_MAX_VIRTUAL_STREAMS) {
+			int dist = ibsz - count;
+			dist = dist < AUD_MAX_VIRTUAL_STREAMS ? dist : AUD_MAX_VIRTUAL_STREAMS;
+
+			std::sort(interBuffer.begin() + count, interBuffer.begin() + count + dist, [](const AudBufferResult& a, const AudBufferResult& b) {return a.tstep > b.tstep; });
+		}
+		count = 0;
+#endif
+
+		for (; count < ibsz; count++) {
 			auto& e = interBuffer[count];
 			auto& strm = streams[count % AUD_MAX_VIRTUAL_STREAMS];
 			if (count / AUD_MAX_VIRTUAL_STREAMS == 0) {

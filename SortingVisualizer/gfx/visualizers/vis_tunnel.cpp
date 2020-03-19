@@ -1,13 +1,13 @@
 #include "visualizers.h"
 #if GFX_ENABLED
 
-#define TUBE_LENGTH 1.f
-#define FOV 120.f
+#define TUBE_LENGTH 2.f
+#define FOV 100.f
 
 namespace {
 	struct _ : public Visualizer {
 		_() {
-			name = "Tube Amalgam Visualizer";
+			name = "Tunnel Visualizer";
 			shader = &shader_basic_3d;
 		}
 
@@ -36,6 +36,6 @@ namespace {
 	}_;
 }
 
-Visualizer* visualizer_tube_amalgam = &::_;
+Visualizer* visualizer_tunnel = &::_;
 
 #endif

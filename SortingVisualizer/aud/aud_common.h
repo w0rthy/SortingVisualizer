@@ -14,6 +14,8 @@
 #define AUD_MAX_NOTES_PER_VIRTUAL_STREAM_PER_TICK 1
 //Amount of time to forcibly prevent playing no sound when starved of accesses from the IB by playing the last synthesized buffer
 #define AUD_MAX_GRACE_TIME 0.05
+//Whether or not to ensure that lower number streams mix the lowest notes available
+#define AUD_ORDER_STREAMS_BY_PITCH 1
 
 //How much of the internal access buffer to target for consumption over the course of an interpolated cycle
 //	Low values increases resiliance of audio quality against abnormally long cycles but introduces a small delay

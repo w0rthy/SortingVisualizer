@@ -376,6 +376,18 @@ struct DemoPair {
 	Visualizer* vis;
 };
 
+//Need to implement a better solution for this
+vector<DemoPair> demos = {
+	{sort_bubble,visualizer_tunnel},
+	{sort_merge_inplace_weave,visualizer_tunnel},
+	{sort_cocktail_shaker,visualizer_tunnel},
+	{sort_heap_max,visualizer_tunnel},
+	{sort_shell,visualizer_tunnel},
+	{sort_quick_linked,visualizer_tunnel},
+	{sort_bwradix_msd_inplace,visualizer_tunnel},
+	{sort_bwradix_lsd_inplace,visualizer_tunnel}
+};
+/*
 vector<DemoPair> demos = {
 	{sort_selection,visualizer_basic},
 	{sort_bubble,visualizer_basic_galaxy},
@@ -394,7 +406,7 @@ vector<DemoPair> demos = {
 	{sort_bwradix_lsd,visualizer_basic},
 	{sort_bwradix_lsd_inplace,visualizer_cube_amalgam},
 	{sort_bogo_improved,visualizer_basic}
-};
+};*/
 
 void cmd_demo(vector<string>& args) {
 	for (auto& d : demos) {
@@ -404,8 +416,6 @@ void cmd_demo(vector<string>& args) {
 		}
 		runSort(sort_shuffle);
 		sleep(1000);
-		if (d.sort == sort_counting)
-			aud_volume = 0.67f;
 		runSort(d.sort);
 		aud_volume = 1.f;
 		sleep(1500);
