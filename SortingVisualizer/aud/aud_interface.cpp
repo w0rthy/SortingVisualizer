@@ -23,11 +23,7 @@ void rebuildPitchTable() {
 	double tmp = (double)AUD_BASE_PITCH;
 
 	//Determine exponential rate
-#if AUD_PITCH_BOUND_BY_OCTAVES
-	double rate = pow(pow(2., (double)AUD_PITCH_NUM_OCTAVES),1./(double)(pitchArraySz-1));
-#else
 	double rate = pow((double)AUD_PITCH_MAX_FREQ / tmp,1./(double)(pitchArraySz - 1));
-#endif
 	//Fill table
 	for (int i = 0; i < pitchArraySz; i++) {
 		pitchArray[i] = tmp;

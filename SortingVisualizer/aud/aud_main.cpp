@@ -19,6 +19,11 @@ int graceCycles = 0;
 timer audTimer;
 double audOutErr = 0.0;
 
+#if AUD_USE_NOISE_REDUCTION
+float noisevec[AUD_MAX_VIRTUAL_STREAMS];
+const float maxPitchLog = logf((float)AUD_PITCH_MAX_FREQ / (float)AUD_BASE_PITCH);
+#endif
+
 static void aud_synthesize_init() {
 	for (int i = 0; i < AUD_MAX_VIRTUAL_STREAMS; i++)
 		tvec[i] = 0.f;
@@ -77,7 +82,8 @@ static int aud_synthesize(const void* bufferIn, void* bufferOut, unsigned long b
 			int dist = ibsz - count;
 			dist = dist < AUD_MAX_VIRTUAL_STREAMS ? dist : AUD_MAX_VIRTUAL_STREAMS;
 
-			std::sort(interBuffer.begin() + count, interBuffer.begin() + count + dist, [](const AudBufferResult& a, const AudBufferResult& b) {return a.tstep > b.tstep; });
+			auto loc = interBuffer.begin() + count;
+			std::sort(loc, loc + dist, [](const AudBufferResult& a, const AudBufferResult& b) {return a.tstep > b.tstep; });
 		}
 		count = 0;
 #endif
@@ -133,6 +139,10 @@ static int aud_synthesize(const void* bufferIn, void* bufferOut, unsigned long b
 	float smllbias = 1.f;
 
 	for (unsigned long i = 0; i < bufferSz; i++) {
+#if AUD_USE_NOISE_REDUCTION
+		float mulsum = 0.f;
+#endif
+
 		*out = 0;
 		float pos = bigpos, bias = bigbias, lbias = biglbias;
 		for (int j = 0; j < numstreams; j++) {
@@ -142,12 +152,24 @@ static int aud_synthesize(const void* bufferIn, void* bufferOut, unsigned long b
 			AudBufferResult& e1 = streams[j][(int)pos], & e2 = streams[j][(int)pos+1];
 			float tstep = e1.tstep * lbias + e2.tstep * bias;
 
+#if AUD_USE_NOISE_REDUCTION
+			float noise = powf(1.f - fabsf(logf(e1.tstep / e2.tstep) / maxPitchLog), AUD_NOISE_REDUCTION_AMT);
+			noise = (noisevec[j] * (1.f-AUD_NOISE_INERTIA_AMT) + noise * AUD_NOISE_INERTIA_AMT);
+			*out += ((*e1.wave)(t, tstep) * lbias * noisevec[j] + (*e2.wave)(t, tstep) * bias) * noise;
+			mulsum += (noisevec[j] * lbias + noise * bias);
+			noisevec[j] = noise;
+#else
 			*out += (*e1.wave)(t, tstep) * lbias + (*e2.wave)(t, tstep) * bias;
+#endif
 			t += tstep;
 			if (t >= 1.f)
 				t -= 1.f;
 		}
+#if AUD_USE_NOISE_REDUCTION
+		* out++ *= aud_volume / mulsum;
+#else
 		*out++ *= mul;
+#endif
 		bigpos += bigstep;
 		bigbias = bigpos - (float)(int)bigpos;
 		biglbias = 1.f - bigbias;

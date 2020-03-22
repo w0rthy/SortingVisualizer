@@ -16,6 +16,8 @@ int watchListSize = array.sz;
 thread controlThread;
 thread sortThread;
 
+Wave curWave;
+
 string toLower(string& a) {
 	string str;
 	str.reserve(a.length());
@@ -87,6 +89,9 @@ void controlFunc() {
 }
 
 void launchControlThread() {
+	mergeWaves(&curWave, defaultWave, defaultWave); //Setup the waveform
+	defaultWave = &curWave;
+
 	state.token_control();
 	for (int i = 0; i < array.sz; i++)
 		array[i].val = i + 1;
@@ -135,6 +140,48 @@ void beginSort(Sort* toRun) {
 	}
 	sortThread = thread([&, toRun]() {toRun->sort(array, watchList); });
 	sortThread.detach();
+}
+
+//Util functions
+Wave* promptForWave(vector<string>& args) {
+	vector<Wave*> matches;
+
+	for (auto& s : waves) {
+		Wave* w = (Wave*)s;
+		string name = toLower(w->name);
+		bool success = true;
+		for (auto& srch : args) {
+			if (name.find(srch) == string::npos) {
+				success = false;
+				break;
+			}
+		}
+		if (success)
+			matches.push_back(w);
+	}
+
+	if (matches.size() <= 0) {
+		printf("No waveforms found containing those terms.\n");
+		return nullptr;
+	}
+
+	Wave* toUse = matches[0];
+
+	if (matches.size() > 1) {
+		printf("Enter the number of the correct result.\n");
+		for (int i = 0; i < matches.size(); i++) {
+			printf("  %d. %s\n", i + 1, matches[i]->name.c_str());
+		}
+		int res = readInt();
+		res--;
+		if (res < 0 || res >= matches.size()) {
+			printf("Number out of bounds\n");
+			return nullptr;
+		}
+		toUse = matches[res];
+	}
+
+	return toUse;
 }
 
 //
@@ -258,45 +305,26 @@ void cmd_wave(vector<string>& args) {
 		return;
 	}
 
-	vector<Wave*> matches;
+	Wave* toUse = promptForWave(args);
+	if (!toUse)
+		return;
 
-	for (auto& s : waves) {
-		Wave* w = (Wave*)s;
-		string name = toLower(w->name);
-		bool success = true;
-		for (auto& srch : args) {
-			if (name.find(srch) == string::npos) {
-				success = false;
-				break;
-			}
-		}
-		if (success)
-			matches.push_back(w);
-	}
+	printf("Switching Default Waveform to %s\n", toUse->name.c_str());
+	mergeWaves(&curWave, toUse, toUse);
+}
 
-	if (matches.size() <= 0) {
-		printf("No sorts found containing those terms.\n");
+void cmd_mixwave(vector<string>& args) {
+	if (args.size() < 1) {
+		printf("Must supply a name to search for.\n");
 		return;
 	}
 
-	Wave* toUse = matches[0];
-
-	if (matches.size() > 1) {
-		printf("Enter the number of the correct result.\n");
-		for (int i = 0; i < matches.size(); i++) {
-			printf("  %d. %s\n", i + 1, matches[i]->name.c_str());
-		}
-		int res = readInt();
-		res--;
-		if (res < 0 || res >= matches.size()) {
-			printf("Number out of bounds\n");
-			return;
-		}
-		toUse = matches[res];
-	}
+	Wave* toUse = promptForWave(args);
+	if (!toUse)
+		return;
 
 	printf("Switching Default Waveform to %s\n", toUse->name.c_str());
-	defaultWave = toUse;
+	mergeWaves(&curWave, &curWave, toUse);
 }
 
 void cmd_spd(vector<string>& args) {
@@ -355,7 +383,7 @@ void cmd_vol(vector<string>& args) {
 #if GFX_ENABLED
 #include "../gfx/visualizers/visualizers.h"
 
-void sleep(unsigned int amt) {
+inline void sleep(unsigned int amt) {
 	std::this_thread::sleep_for(std::chrono::milliseconds(amt));
 }
 
@@ -378,14 +406,21 @@ struct DemoPair {
 
 //Need to implement a better solution for this
 vector<DemoPair> demos = {
-	{sort_bubble,visualizer_tunnel},
-	{sort_merge_inplace_weave,visualizer_tunnel},
-	{sort_cocktail_shaker,visualizer_tunnel},
-	{sort_heap_max,visualizer_tunnel},
-	{sort_shell,visualizer_tunnel},
-	{sort_quick_linked,visualizer_tunnel},
-	{sort_bwradix_msd_inplace,visualizer_tunnel},
-	{sort_bwradix_lsd_inplace,visualizer_tunnel}
+	{sort_selection,visualizer_basic},
+	{sort_bubble,visualizer_basic},
+	{sort_insertion,visualizer_basic},
+	{sort_merge_inplace_weave,visualizer_basic},
+	{sort_cocktail_shaker,visualizer_basic},
+	{sort_gravity,visualizer_basic},
+	{sort_heap_max,visualizer_basic},
+	{sort_counting,visualizer_basic},
+	{sort_shell,visualizer_basic},
+	{sort_quick,visualizer_basic},
+	{sort_merge_agg_oop,visualizer_basic},
+	{sort_bwradix_msd,visualizer_basic},
+	{sort_bwradix_msd_inplace,visualizer_basic},
+	{sort_bwradix_lsd,visualizer_basic},
+	{sort_bwradix_lsd_inplace,visualizer_basic}
 };
 /*
 vector<DemoPair> demos = {
@@ -417,7 +452,6 @@ void cmd_demo(vector<string>& args) {
 		runSort(sort_shuffle);
 		sleep(1000);
 		runSort(d.sort);
-		aud_volume = 1.f;
 		sleep(1500);
 	}
 }
@@ -446,6 +480,7 @@ namespace {
 			Command("size", cmd_size);
 			Command("vis", cmd_vis);
 			Command("wave", cmd_wave);
+			Command("mixwave", cmd_mixwave);
 			Command("vol", cmd_vol);
 			Command("demo", cmd_demo);
 		}
