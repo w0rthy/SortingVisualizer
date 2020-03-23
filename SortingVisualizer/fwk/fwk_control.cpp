@@ -404,24 +404,29 @@ struct DemoPair {
 	Visualizer* vis;
 };
 
+#define DEMOVIS visualizer_tree
+
 //Need to implement a better solution for this
 vector<DemoPair> demos = {
-	{sort_selection,visualizer_basic},
-	{sort_bubble,visualizer_basic},
-	{sort_insertion,visualizer_basic},
-	{sort_merge_inplace_weave,visualizer_basic},
-	{sort_cocktail_shaker,visualizer_basic},
-	{sort_gravity,visualizer_basic},
-	{sort_heap_max,visualizer_basic},
-	{sort_counting,visualizer_basic},
-	{sort_shell,visualizer_basic},
-	{sort_quick,visualizer_basic},
-	{sort_merge_agg_oop,visualizer_basic},
-	{sort_bwradix_msd,visualizer_basic},
-	{sort_bwradix_msd_inplace,visualizer_basic},
-	{sort_bwradix_lsd,visualizer_basic},
-	{sort_bwradix_lsd_inplace,visualizer_basic}
+	{sort_selection,DEMOVIS},
+	{sort_bubble,DEMOVIS},
+	{sort_insertion,DEMOVIS},
+	{sort_merge_inplace_weave,DEMOVIS},
+	{sort_cocktail_shaker,DEMOVIS},
+	//{sort_gravity,DEMOVIS},
+	{sort_heap_max,DEMOVIS},
+	//{sort_counting,DEMOVIS},
+	{sort_shell,DEMOVIS},
+	{sort_quick,DEMOVIS},
+	//{sort_merge_agg_oop,DEMOVIS},
+	{sort_bwradix_msd,DEMOVIS},
+	{sort_bwradix_msd_inplace,DEMOVIS},
+	{sort_bwradix_lsd,DEMOVIS},
+	{sort_bwradix_lsd_inplace,DEMOVIS}
 };
+
+#undef DEMOVIS
+
 /*
 vector<DemoPair> demos = {
 	{sort_selection,visualizer_basic},

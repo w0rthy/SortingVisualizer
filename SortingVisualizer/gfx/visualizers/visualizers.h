@@ -9,5 +9,6 @@ extern Visualizer* visualizer_cube_amalgam;
 extern Visualizer* visualizer_square_grove;
 extern Visualizer* visualizer_galaxy_spiral;
 extern Visualizer* visualizer_tunnel;
+extern Visualizer* visualizer_tree;
 
 #endif

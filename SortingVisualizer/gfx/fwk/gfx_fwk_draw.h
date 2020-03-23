@@ -43,7 +43,7 @@ inline void drawShape(Shape* shape, vec3 pos = vec3(0.f, 0.f, 0.f), vec3 size = 
 
 //Draws the specified shape with the specified parameters and mutation matrix
 inline void drawShape(Shape* shape, mat4& mutate, vec3 pos = vec3(0.f, 0.f, 0.f), vec3 size = vec3(1.f, 1.f, 1.f), vec3 angle = vec3(0.f, 0.f, 0.f), vec4 color = vec4(1.f, 1.f, 1.f, 1.f)) {
-	drawShape(shape, mutate*calcModelMat(pos, size, angle), color);
+	drawShape(shape, calcModelMat(pos, size, angle)*mutate, color);
 }
 
 //Draws the specified shape such that it is not affected by aspect ratio

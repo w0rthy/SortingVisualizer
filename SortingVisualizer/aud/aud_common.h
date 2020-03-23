@@ -18,9 +18,9 @@
 #define AUD_ORDER_STREAMS_BY_PITCH 1
 //Whether or not to reduce the volume of notes based on how different their pitch is from the last note mixed into that virtual stream
 //	Works best with `AUD_ORDER_STREAMS_BY_PITCH` enabled
-#define AUD_USE_NOISE_REDUCTION 1
+#define AUD_USE_NOISE_REDUCTION 0
 //The amount of noise reduction, after the percentage of noise is calculated, it will be raised to this power
-#define AUD_NOISE_REDUCTION_AMT 8
+#define AUD_NOISE_REDUCTION_AMT 2
 //The amount of change that can a channel's noise multiplier can be effected by in one cycle
 //NOTE: Might want to change this to be independent of tick rate/response time
 #define AUD_NOISE_INERTIA_AMT 0.1
