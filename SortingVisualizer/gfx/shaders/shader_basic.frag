@@ -2,9 +2,8 @@ string frag = "#version 330 core\n\
 \
 uniform vec4 color;\
 \
-uniform int scrw;\
-uniform int scrh;\
+in vec4 color_frag;\
 \
 void main(){\
-	gl_FragColor = color;\
+	gl_FragColor = color*color_frag;\
 }";

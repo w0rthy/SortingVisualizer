@@ -10,5 +10,7 @@ extern Visualizer* visualizer_square_grove;
 extern Visualizer* visualizer_galaxy_spiral;
 extern Visualizer* visualizer_tunnel;
 extern Visualizer* visualizer_tree;
+extern Visualizer* visualizer_disparity_dots_2d;
+extern Visualizer* visualizer_dots_2d;
 
 #endif

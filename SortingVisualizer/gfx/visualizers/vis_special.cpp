@@ -57,7 +57,7 @@ namespace {
 
 			vec4 col = marked ? vec4(0.f, 0.f, 0.f, 1.f) : colHSV(dist+0.33f, 1.f, 1.f);
 			for (auto& mat : mutations)
-				drawShape(shape_cube, mat, p, EL_SZ * vec3(el_sz, 0.02f, el_sz), vec3(), col);
+				drawShape(shape_cube, mat * calcModelMat(p, EL_SZ * vec3(el_sz, 0.02f, el_sz), vec3()), col);
 		}
 	}_;
 }

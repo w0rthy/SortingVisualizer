@@ -6,40 +6,38 @@
 namespace {
 	struct _ : public Shape {
 
-		void calcNormal(int triNum, vec3& v1, vec3& v2, vec3& v3) {
-			if (triNum % 2) {
-				normals += v1 * vec3(2.f, 2.f, 0.f);
-				normals += v2 * vec3(2.f, 2.f, 0.f);
-				normals += v3 * vec3(2.f, 2.f, 0.f);
-			}
-			else {
-				normals += v1 * vec3(-2.f, -2.f, 0.f);
-				normals += v2 * vec3(-2.f, -2.f, 0.f);
-				normals += v3 * vec3(-2.f, -2.f, 0.f);
-			}
-		}
+		vec3 offset = vec3(0.f, 0.5f, 0.f); //Controls height of object
+		vec3 normalVec = vec3(1.f, 0.f, 1.f); //Multiplying by this gives the normal for the cylinder
 
 		_() {
-			vertices.reserve(STEPS * 3 * 2 * 2);
+			vertices.reserve(STEPS * 12);
 			constexpr float angstep = glm::radians(360.f / (float)STEPS);
 
-			mat3 hor_mat = glm::rotate(mat4(1.f), angstep, vec3(0.f, 0.f, -1.f));
+			mat3 hor_mat = glm::rotate(mat4(1.f), angstep, vec3(0.f, -1.f, 0.f));
 
-			vec3 controlVert = vec3(0.f, 0.5f, 0.5f);
-			vec3 controlVert2 = controlVert;
+			vec3 controlVert = vec3(0.5f, 0.f, 0.f);
+
+			vec3 tmp, tmp2;
+
 			for (int i = 0; i < STEPS; i++) {
-				controlVert2 = hor_mat * controlVert;
-				vertices += controlVert;
-				controlVert[2] -= 1.f;
-				vertices += controlVert;
-				vertices += controlVert2;
+				tmp = controlVert;
+				controlVert = hor_mat * controlVert;
+				//Cylinder Vertices
+				tmp2 = tmp - offset;
+				vertices += vertex(tmp2, tmp2 * normalVec);
+				tmp2 = tmp + offset;
+				vertices += vertex(tmp2, tmp2 * normalVec);
+				tmp2 = controlVert - offset;
+				vertices += vertex(tmp2, tmp2 * normalVec);
 				vertices.flipLastTri();
-
-				vertices += controlVert2;
-				vertices += controlVert;
-				vertices += controlVert2 - vec3(0.f, 0.f, 1.f);
+				//
+				tmp2 = tmp + offset;
+				vertices += vertex(tmp2, tmp2 * normalVec);
+				tmp2 = controlVert + offset;
+				vertices += vertex(tmp2, tmp2 * normalVec);
+				tmp2 = controlVert - offset;
+				vertices += vertex(tmp2, tmp2 * normalVec);
 				vertices.flipLastTri();
-				controlVert = controlVert2;
 			}
 		}
 	} _;

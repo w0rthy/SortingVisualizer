@@ -13,18 +13,44 @@ using vec3 = glm::vec3;
 using vec4 = glm::vec4;
 using mat3 = glm::mat3;
 
-struct vertexVector : public vector<float> {
-	using vector<float>::vector;
+struct vertex {
+	vec3 pos;
+	vec3 normal;
+	vec4 color;
 
-	using vector<float>::push_back;
-
-	void push_back(const vec3& v) {
-		push_back(v[0]);
-		push_back(v[1]);
-		push_back(v[2]);
+	vertex(vec3 pos) {
+		this->pos = pos;
+		normal = vec3(FLT_MAX,FLT_MAX,FLT_MAX); //Denotes an undefined normal
+		color = vec4(1.f, 1.f, 1.f, 1.f);
 	}
 
-	inline vertexVector& operator+=(const vec3& v) {
+	vertex(vec3 pos, vec3 normal) : vertex(pos) {
+		this->normal = glm::normalize(normal);
+	}
+
+	vertex(vec3 pos, vec3 normal, vec4 color) : vertex(pos,normal) {
+		this->color = color;
+	}
+};
+
+struct vertexVector : public vector<vertex> {
+	using vector<vertex>::vector;
+
+	void push_back(const vertex& v) {
+		vector<vertex>::push_back(v);
+		auto sz = (int)size();
+		//Check for undefined normals, and define them
+		if (sz % 3 == 0) {
+			vec3 norm = glm::triangleNormal(at(sz - 3).pos, at(sz - 2).pos, at(sz - 1).pos);
+			for (int i = 1; i <= 3; i++) {
+				auto& tmp = at(sz - i);
+				if (tmp.normal[0] == FLT_MAX)
+					tmp.normal = norm;
+			}
+		}
+	}
+
+	inline vertexVector& operator+=(const vertex& v) {
 		push_back(v);
 		return *this;
 	}
@@ -36,14 +62,13 @@ struct vertexVector : public vector<float> {
 	}
 
 	inline void flipLastTri() {
-		int pos = size();
-		int i;
-		for (i = 9; i >= 7; i--)
-			push_back(at(pos - i));
-		for (i = 3; i >= 1; i--)
-			push_back(at(pos - i));
-		for (i = 6; i >= 4; i--)
-			push_back(at(pos - i));
+		auto sz = size();
+		push_back(at(sz - 3));
+		push_back(at(sz - 1));
+		push_back(at(sz - 2));
+		//Flip the normals
+		for (int i = 0; i < 3; i++)
+			at(sz + i).normal *= -1.f;
 	}
 };
 
@@ -57,12 +82,10 @@ struct mat4 : public glm::mat4 {
 
 	vertexVector operator*(vertexVector& vvec) {
 		vertexVector tmp;
-
-		vec4 v;
-		for (int i = 0; i < vvec.size(); i += 3) {
-			v = vec4(vvec[i], vvec[i + 1], vvec[i + 2], 0);
-			tmp += (*this) * v;
-		}
+		mat3 normMat = glm::transpose(glm::inverse((mat3)*this));
+		
+		for (auto& v : vvec)
+			tmp.push_back(vertex((vec3)(*this * vec4(v.pos, 1.f)), normMat * v.normal, v.color));
 
 		return tmp;
 	}

@@ -5,6 +5,6 @@ namespace {
 #include "shader_font_2d.vert"
 #include "shader_font_2d.frag"
 }
-Shader shader_font_2d(::vert, ::frag);
+Shader shader_font_2d(__FILE__,::vert, ::frag);
 
 #endif

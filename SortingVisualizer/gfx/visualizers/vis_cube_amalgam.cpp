@@ -56,8 +56,8 @@ namespace {
 			);
 
 			vec4 col = marked ? vec4(0.f, 0.f, 0.f, 1.f) : colHSV((float)e->val / inf->realSize, 1.f, 1.f);
-			for(auto& mat : mutations)
-				drawShape(shape_cube, mat, p, EL_SZ*vec3(el_sz, 0.02f, el_sz), vec3(), col);
+			for (auto& mat : mutations)
+				drawShape(shape_cube, mat*calcModelMat(p, EL_SZ * vec3(el_sz, 0.02f, el_sz), vec3()), col);
 		}
 	}_;
 }

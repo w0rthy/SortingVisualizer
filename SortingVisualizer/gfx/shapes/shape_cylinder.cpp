@@ -7,19 +7,7 @@ namespace {
 	struct _ : public Shape {
 
 		vec3 offset = vec3(0.f, 0.5f, 0.f); //Controls height of object
-
-		void calcNormal(int triNum, vec3& v1, vec3& v2, vec3& v3) {
-			vec3 V1 = vec3(v1[0], 0.f, v1[2]);
-			vec3 V2 = vec3(v2[0], 0.f, v2[2]);
-			vec3 V3 = vec3(v3[0], 0.f, v3[2]);
-			if(triNum%4>1){
-				normals += glm::normalize(V1);
-				normals += glm::normalize(V2);
-				normals += glm::normalize(V3);
-			}
-			else
-				defaultNormal(v1, v2, v3);
-		}
+		vec3 normalVec = vec3(1.f, 0.f, 1.f); //Multiplying by this gives the normal for the cylinder
 
 		_() {
 			vertices.reserve(STEPS * 12);
@@ -29,7 +17,7 @@ namespace {
 
 			vec3 controlVert = vec3(0.5f, 0.f, 0.f);
 
-			vec3 tmp;
+			vec3 tmp, tmp2;
 			
 			for (int i = 0; i < STEPS; i++) {
 				tmp = controlVert;
@@ -43,13 +31,19 @@ namespace {
 				vertices += controlVert + offset;
 				vertices += tmp + offset;
 				//Cylinder Vertices
-				vertices += tmp - offset;
-				vertices += tmp + offset;
-				vertices += controlVert-offset;
+				tmp2 = tmp - offset;
+				vertices += vertex(tmp2, tmp2*normalVec);
+				tmp2 = tmp + offset;
+				vertices += vertex(tmp2, tmp2*normalVec);
+				tmp2 = controlVert - offset;
+				vertices += vertex(tmp2, tmp2*normalVec);
 				//
-				vertices += tmp + offset;
-				vertices += controlVert + offset;
-				vertices += controlVert - offset;
+				tmp2 = tmp + offset;
+				vertices += vertex(tmp2, tmp2*normalVec);
+				tmp2 = controlVert + offset;
+				vertices += vertex(tmp2, tmp2*normalVec);
+				tmp2 = controlVert - offset;
+				vertices += vertex(tmp2, tmp2*normalVec);
 			}
 		}
 	} _;

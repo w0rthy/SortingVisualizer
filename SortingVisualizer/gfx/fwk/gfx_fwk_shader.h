@@ -16,7 +16,7 @@ void compileAllShaders();
 struct Shader {
 private:
 	GLuint prgrm;
-	const char* vert, * frag, * geom;
+	const char* name, * vert, * frag, * geom;
 public:
 	inline void operator()() {
 		glUseProgram(prgrm);
@@ -60,7 +60,8 @@ public:
 			glDeleteShader(shader_geom);
 	}
 
-	Shader(const char* vert, const char* frag, const char* geom = nullptr) {
+	Shader(const char* name, const char* vert, const char* frag, const char* geom = nullptr) {
+		this->name = name;
 		this->vert = vert;
 		this->frag = frag;
 		this->geom = geom;
@@ -74,7 +75,7 @@ private:
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 		if (!success) {
 			glGetShaderInfoLog(shader, 1024, 0, info_log);
-			printf("Failed to compile %s shader: \n  %s\n", type, info_log);
+			printf("%s:\nFailed to compile %s shader: \n  %s\n", name, type, info_log);
 		}
 	}
 
@@ -84,7 +85,7 @@ private:
 		glGetProgramiv(prgrm, GL_LINK_STATUS, &success);
 		if (!success) {
 			glGetProgramInfoLog(prgrm, 1024, 0, info_log);
-			printf("Failed to link shader program: \n  %s\n", info_log);
+			printf("%s:\nFailed to link shader program: \n  %s\n", name, info_log);
 		}
 	}
 };

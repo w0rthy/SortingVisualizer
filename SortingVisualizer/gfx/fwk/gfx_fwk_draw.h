@@ -15,7 +15,7 @@ inline void setProjectionMat(mat4 m) {
 
 inline mat4 perspective(float fovy, float aspect, float zNear, float zFar) {
 	mat4 tmp = glm::perspective(glm::radians(fovy), aspect, zNear, zFar);
-	tmp[0] *= -1.f; //Fix the x axis
+	tmp[2] *= -1.f; //Fix the x axis
 	return tmp;
 }
 
@@ -60,7 +60,7 @@ inline void drawFontString2DCorrected(FontID font, string s, vec3 pos = vec3(0.f
 	size[0] /= scraspect;
 	drawFontString2D(font, s, pos, size, angle, color);
 }
-inline void drawFontString2DCenteredCentered(FontID font, string s, vec3 pos = vec3(0.f, 0.f, 0.f), vec3 size = vec3(1.f, 1.f, 1.f), vec3 angle = vec3(0.f, 0.f, 0.f), vec4 color = vec4(1.f, 1.f, 1.f, 1.f)) {
+inline void drawFontString2DCenteredCorrected(FontID font, string s, vec3 pos = vec3(0.f, 0.f, 0.f), vec3 size = vec3(1.f, 1.f, 1.f), vec3 angle = vec3(0.f, 0.f, 0.f), vec4 color = vec4(1.f, 1.f, 1.f, 1.f)) {
 	size[0] /= scraspect;
 	drawFontString2DCentered(font, s, pos, size, angle, color);
 }

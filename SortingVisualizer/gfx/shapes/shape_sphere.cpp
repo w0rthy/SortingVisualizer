@@ -6,12 +6,6 @@
 namespace {
 	struct _ : public Shape {
 
-		void calcNormal(int triNum, vec3& v1, vec3& v2, vec3& v3) {
-			normals += v1*2.f;
-			normals += v2*2.f;
-			normals += v3*2.f;
-		}
-
 		_() {
 			vertices.reserve(STEPS * STEPS * 6);
 			constexpr float angstep = glm::radians(360.f / (float)STEPS);
@@ -27,14 +21,14 @@ namespace {
 				control2Vert = controlVert;
 				control3Vert = ver_mat * control2Vert;
 				for (int j = 0; j < STEPS; j++) {
-					vertices += control2Vert;
-					vertices += control3Vert;
+					vertices += vertex(control2Vert,control2Vert);
+					vertices += vertex(control3Vert,control3Vert);
 					control3Vert = hor_mat * control3Vert;
-					vertices += control3Vert;
-					vertices += control2Vert;
+					vertices += vertex(control3Vert,control3Vert);
+					vertices += vertex(control2Vert,control2Vert);
 					control2Vert = hor_mat * control2Vert;
-					vertices += control3Vert;
-					vertices += control2Vert;
+					vertices += vertex(control3Vert,control3Vert);
+					vertices += vertex(control2Vert,control2Vert);
 				}
 				controlVert = ver_mat * controlVert;
 			}

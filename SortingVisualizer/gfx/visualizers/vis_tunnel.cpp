@@ -12,6 +12,7 @@ namespace {
 		}
 
 		float zOffset = 0.f;
+		mat4 mutate = rotMat(vec3(90.f, 0.f, 0.f));
 
 		void init() {
 			usePerspective(FOV, 1.f, 0.1f, 100.f);
@@ -31,7 +32,7 @@ namespace {
 			float z = (float)pos * len + zOffset + len/2.f;
 
 			vec4 col = marked ? vec4(0.f, 0.f, 0.f, 1.f) : colHSV((float)e->val / inf->realSize, 1.f, 1.f);
-			drawShape(shape_ring, vec3(0.f, 0.f, -z), vec3(1.f, 1.f, len), vec3(), col);
+			drawShape(shape_ring, mutate, vec3(0.f, 0.f, -z), vec3(1.f, 1.f, len), vec3(), col);
 		}
 	}_;
 }

@@ -404,7 +404,7 @@ struct DemoPair {
 	Visualizer* vis;
 };
 
-#define DEMOVIS visualizer_tree
+#define DEMOVIS visualizer_disparity_dots_2d
 
 //Need to implement a better solution for this
 vector<DemoPair> demos = {
@@ -413,16 +413,18 @@ vector<DemoPair> demos = {
 	{sort_insertion,DEMOVIS},
 	{sort_merge_inplace_weave,DEMOVIS},
 	{sort_cocktail_shaker,DEMOVIS},
-	//{sort_gravity,DEMOVIS},
+	{sort_gravity,DEMOVIS},
 	{sort_heap_max,DEMOVIS},
-	//{sort_counting,DEMOVIS},
+	{sort_counting,DEMOVIS},
+	{sort_pancake,DEMOVIS},
 	{sort_shell,DEMOVIS},
 	{sort_quick,DEMOVIS},
-	//{sort_merge_agg_oop,DEMOVIS},
+	{sort_merge_agg_oop,DEMOVIS},
 	{sort_bwradix_msd,DEMOVIS},
 	{sort_bwradix_msd_inplace,DEMOVIS},
 	{sort_bwradix_lsd,DEMOVIS},
-	{sort_bwradix_lsd_inplace,DEMOVIS}
+	{sort_bwradix_lsd_inplace,DEMOVIS},
+	{sort_bogo_improved,DEMOVIS}
 };
 
 #undef DEMOVIS
@@ -456,6 +458,8 @@ void cmd_demo(vector<string>& args) {
 		}
 		runSort(sort_shuffle);
 		sleep(1000);
+		if(d.sort==sort_bogo_improved)
+			state.accessValueMul = 1.0;
 		runSort(d.sort);
 		sleep(1500);
 	}

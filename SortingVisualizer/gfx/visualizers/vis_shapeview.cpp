@@ -25,7 +25,7 @@ namespace {
 		}
 
 		bool drawList(VisualizerListInfo* inf, List<int>* l, int depthInd, int depth) {
-			drawShape(shape_ring);
+			drawShape(shape_sphere);
 			return false;
 		}
 	}_;

@@ -7,18 +7,17 @@ namespace {
 	struct _ : public Shape {
 
 		vec3 offset = vec3(0.f, 0.5f, 0.f); //Controls height of object
-		vec3 normalAdd = vec3(0.f, 0.5f/(offset[1]*2.f)*0.5f, 0.f); //Used for calculating normals of side vertices
+		float normalAdd = 0.125f/(offset[1]); //Used for calculating normals of side vertices
 
-		void calcNormal(int triNum, vec3& v1, vec3& v2, vec3& v3) {
-			vec3 V1 = vec3(v1[0], 0.f, v1[2]);
-			vec3 V3 = vec3(v3[0], 0.f, v3[2]);
-			if (triNum % 2) {
-				normals += glm::normalize(V1 + normalAdd);
-				normals += glm::normalize((V1 + V3) *0.5f + normalAdd);
-				normals += glm::normalize(V3 + normalAdd);
-			}
-			else
-				defaultNormal(v1, v2, v3);
+		vec3 normalizeConeVert(vec3 pos) {
+			pos[1] = 0.f;
+			pos = glm::normalize(pos);
+			pos[1] = normalAdd;
+			return pos;
+		}
+
+		vec3 normalizeConeVert2(vec3 pos1, vec3 pos2) {
+			return normalizeConeVert(pos1) + normalizeConeVert(pos2);
 		}
 
 		_() {
@@ -39,9 +38,9 @@ namespace {
 				tmp2 = controlVert - offset;
 				vertices += tmp2;
 				//Cone vertices
-				vertices += tmp;
-				vertices += offset;
-				vertices += tmp2;
+				vertices += vertex(tmp,normalizeConeVert(tmp));
+				vertices += vertex(offset,normalizeConeVert2(tmp,tmp2));
+				vertices += vertex(tmp2,normalizeConeVert(tmp2));
 
 				tmp = tmp2;
 			}
