@@ -17,8 +17,6 @@ namespace {
 			usePerspective(45.f, 1.f, 0.1f, 100.f);
 		}
 
-		//mat4 cam_mat = glm::translate(mat4(1.f), vec3(0.f, 0.f, -2.414f));
-		//mat4 cam_mat = glm::lookAt(vec3(0.f, 0.3f, -2.414f), vec3(0.f, 0.f, 0.f), vec3(0.f, 1.f, 0.f));
 		mat4 cam_mat = getCamMat(vec3(0.f, 0.f, -2.414f));
 		float cam_angle = 0.f;
 

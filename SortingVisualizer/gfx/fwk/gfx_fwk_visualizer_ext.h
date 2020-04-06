@@ -23,6 +23,15 @@ struct VisualizerListInfo {
 //Create a VisualizerListInfo for the given List
 VisualizerListInfo computeListInfo(List<int>* l);
 
+inline int calcDiff(int val, int pos) {
+	return pos - val;
+}
+
+inline float calcDifff(int val, int pos, int listSize) {
+	int diff = calcDiff(val, pos);
+	return diff < 0 ? (float)diff / (float)(val) : (float)diff / (float)(listSize - val);
+}
+
 inline int calcDisparity(int val, int pos, int listSize) {
 	int diff = abs(val - pos - 1);
 	int sz2 = listSize / 2;

@@ -25,8 +25,7 @@ namespace {
 			mutations.push_back(rotMat(vec3(-90.f, 0.f, 0.f)));
 		}
 
-		//mat4 cam_mat = rotMat(vec3(30.f, 0.f, 0.f)) * glm::translate(mat4(1.f), vec3(0.f, -2.f, -4.f));
-		mat4 cam_mat = getCamMat(vec3(0.f, 2.f, 4.f));
+		mat4 cam_mat = getCamMatLookingAt(vec3(0.f, 2.f, -4.f));
 		float cam_angle = 0.f;
 
 		int side_length;

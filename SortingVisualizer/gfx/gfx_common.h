@@ -13,19 +13,25 @@ using vec3 = glm::vec3;
 using vec4 = glm::vec4;
 using mat3 = glm::mat3;
 
+//Denotes an undefined normal
+#define NONORMAL vec3(FLT_MAX,FLT_MAX,FLT_MAX)
+
 struct vertex {
 	vec3 pos;
 	vec3 normal;
 	vec4 color;
 
-	vertex(vec3 pos) {
-		this->pos = pos;
-		normal = vec3(FLT_MAX,FLT_MAX,FLT_MAX); //Denotes an undefined normal
+	vertex() {
+		normal = NONORMAL;
 		color = vec4(1.f, 1.f, 1.f, 1.f);
 	}
 
+	vertex(vec3 pos) : vertex() {
+		this->pos = pos;
+	}
+
 	vertex(vec3 pos, vec3 normal) : vertex(pos) {
-		this->normal = glm::normalize(normal);
+			this->normal = normal[0]==FLT_MAX?normal:glm::normalize(normal);
 	}
 
 	vertex(vec3 pos, vec3 normal, vec4 color) : vertex(pos,normal) {
@@ -38,7 +44,7 @@ struct vertexVector : public vector<vertex> {
 
 	void push_back(const vertex& v) {
 		vector<vertex>::push_back(v);
-		auto sz = (int)size();
+		auto sz = size();
 		//Check for undefined normals, and define them
 		if (sz % 3 == 0) {
 			vec3 norm = glm::triangleNormal(at(sz - 3).pos, at(sz - 2).pos, at(sz - 1).pos);

@@ -155,8 +155,10 @@ static int aud_synthesize(const void* bufferIn, void* bufferOut, unsigned long b
 #if AUD_USE_NOISE_REDUCTION
 			float noise = powf(1.f - fabsf(logf(e1.tstep / e2.tstep) / maxPitchLog), AUD_NOISE_REDUCTION_AMT);
 			noise = (noisevec[j] * (1.f-AUD_NOISE_INERTIA_AMT) + noise * AUD_NOISE_INERTIA_AMT);
-			*out += ((*e1.wave)(t, tstep) * lbias * noisevec[j] + (*e2.wave)(t, tstep) * bias) * noise;
-			mulsum += (noisevec[j] * lbias + noise * bias);
+			float lbias_ = lbias * noisevec[j];
+			float bias_ = bias * noise;
+			*out += ((*e1.wave)(t, tstep) * lbias_ + (*e2.wave)(t, tstep) * bias_);
+			mulsum += lbias_ + bias_;
 			noisevec[j] = noise;
 #else
 			*out += (*e1.wave)(t, tstep) * lbias + (*e2.wave)(t, tstep) * bias;

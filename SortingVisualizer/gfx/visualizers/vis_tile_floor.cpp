@@ -14,8 +14,7 @@ namespace {
 			usePerspective(55.f, 1.f, 0.1f, 100.f);
 		}
 
-		//mat4 cam_mat = rotMat(vec3(30.f,0.f,0.f))*glm::translate(mat4(1.f), vec3(0.f, -0.7f, -2.414f));
-		mat4 cam_mat = getCamMat(vec3(0.f, 1.f, -3.f));
+		mat4 cam_mat = getCamMatLookingAt(vec3(0.f, 1.f, -3.f));
 		float cam_angle = 0.f;
 
 		int side_length;

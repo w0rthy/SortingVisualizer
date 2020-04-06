@@ -404,7 +404,7 @@ struct DemoPair {
 	Visualizer* vis;
 };
 
-#define DEMOVIS visualizer_disparity_dots_2d
+#define DEMOVIS visualizer_sphere_agitation
 
 //Need to implement a better solution for this
 vector<DemoPair> demos = {
@@ -413,13 +413,14 @@ vector<DemoPair> demos = {
 	{sort_insertion,DEMOVIS},
 	{sort_merge_inplace_weave,DEMOVIS},
 	{sort_cocktail_shaker,DEMOVIS},
-	{sort_gravity,DEMOVIS},
+	//{sort_gravity,DEMOVIS},
+	{sort_gravity_inplace,DEMOVIS},
 	{sort_heap_max,DEMOVIS},
-	{sort_counting,DEMOVIS},
+	//{sort_counting,DEMOVIS},
 	{sort_pancake,DEMOVIS},
 	{sort_shell,DEMOVIS},
 	{sort_quick,DEMOVIS},
-	{sort_merge_agg_oop,DEMOVIS},
+	//{sort_merge_agg_oop,DEMOVIS},
 	{sort_bwradix_msd,DEMOVIS},
 	{sort_bwradix_msd_inplace,DEMOVIS},
 	{sort_bwradix_lsd,DEMOVIS},

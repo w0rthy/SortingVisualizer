@@ -16,15 +16,20 @@ public:
 	vertexVector vertices;
 	GLuint vao;
 
-
 private:
 	GLuint vbo;
+	bool built = false;
 
 public:
 
 	//Construct the vertices
 	void build() {
-
+		if (built) {
+			glBindVertexArray(vao);
+			glBindBuffer(GL_ARRAY_BUFFER, vbo);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(vertex) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
+			return;
+		}
 		glGenVertexArrays(1, &vao);
 		glBindVertexArray(vao);
 
@@ -43,6 +48,7 @@ public:
 		glEnableVertexAttribArray(2);
 
 		glBindVertexArray(0);
+		built = true;
 	}
 
 	Shape() {
@@ -50,6 +56,7 @@ public:
 	}
 
 	~Shape() {
+		shapes.erase(std::find(shapes.begin(), shapes.end(), this));
 		glDeleteVertexArrays(1, &vao);
 		glDeleteBuffers(1, &vbo);
 	}

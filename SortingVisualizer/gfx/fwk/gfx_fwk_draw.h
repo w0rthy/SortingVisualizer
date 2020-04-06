@@ -24,7 +24,21 @@ inline void usePerspective(float fovy, float aspect, float zNear, float zFar) {
 }
 
 inline mat4 getCamMat(vec3 cam_pos) {
-	return glm::lookAt(cam_pos, vec3(), vec3(0.f, 1.f, 0.f));
+	mat4 tmp(1.f);
+	tmp[3] = vec4(-cam_pos, 1.f);
+	return tmp;
+}
+
+inline mat4 getCamMat(vec3 cam_pos, vec3 ang) {
+	return rotMat(ang)*getCamMat(cam_pos);
+}
+
+inline mat4 getCamMatLookingAt(vec3 cam_pos, vec3 at = vec3(0.f), float roll = 0.f) {
+	vec3 tmp = at - cam_pos;
+	float y = glm::degrees(atan2f(tmp[0], tmp[2]));
+	float p = sqrtf(tmp[0] * tmp[0] + tmp[2] * tmp[2]);
+	p = glm::degrees(atanf(tmp[1] / p));
+	return getCamMat(cam_pos, vec3(p, y, roll));
 }
 
 inline void useCamMat(vec3 cam_pos) {

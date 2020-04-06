@@ -12,5 +12,6 @@ extern Visualizer* visualizer_tunnel;
 extern Visualizer* visualizer_tree;
 extern Visualizer* visualizer_disparity_dots_2d;
 extern Visualizer* visualizer_dots_2d;
+extern Visualizer* visualizer_sphere_agitation;
 
 #endif
