@@ -6,6 +6,9 @@
 //The current instance id (to distinguish between different sort runs)
 extern int instanceID;
 
+//Called to consider beginning a cycle
+bool FWK_canCycle();
+
 //Called directly before a cycle begins
 void FWK_preCycle();
 
@@ -58,6 +61,7 @@ struct FrameworkState {
 		token_control.nxt = &token_sort;
 		token_sort.nxt = &token_draw;
 
+		token_sort.intentFunc = [&]() {return FWK_canCycle(); };
 		token_sort.onActionBegin = [&]() {FWK_preCycle(); };
 		token_sort.onActionEnd = [&]() {FWK_postCycle(); };
 	}

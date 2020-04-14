@@ -19,7 +19,6 @@ void gravitySortInPlace(ArrayList<int>& arr, int l, int h) {
 			(*abacus[i])[j] = 0;
 		}
 	}
-	state.accessRestricted = true;
 
 	for (int i = max - 1; i >= 0; i--) {
 		int sum = 0;

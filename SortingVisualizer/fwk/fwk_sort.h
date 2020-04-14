@@ -1,6 +1,7 @@
 #pragma once
 #include "../common.h"
 #include "../fwk/lists.h"
+#include "../profiler/pofiler.h"
 
 //SAMPLE SORT STRUCTURE
 
@@ -35,9 +36,11 @@ struct Sort {
 
 	//Whether this sort should be profiled (false for really bad ones)
 	bool profiled = true;
+	profileFunc accessFunc;
+	float sortTime = 10.f;
 
 	//How many accesses per second the algorithm should be allowed (Determines speed)
-	long long accessQuota = 0;
+	long long accessQuota = 1000;
 
 	Sort() {
 		sorts.push_back(this);
@@ -48,15 +51,36 @@ protected:
 	virtual void sort_(ArrayList<int>& arr, List<int>*& watch) = 0;
 public:
 	//Function to handle entire sorting process
-	virtual void sort(ArrayList<int>& arr, List<int>*& watch) {
+	void sort(ArrayList<int>& arr, List<int>*& watch) {
+		if (profiled && !accessFunc)
+			accessFunc = profileSort(this);
 		FWK_preSort();
 		state.sorting = true;
 		state.token_sort();
 		currentSort = this;
-		if(accessQuota>0)
-			state.accessValuePer = 1.0 / accessQuota;
+		if (profiled)
+			state.accessValuePer = 1.0 / (double)accessFunc(arr.sz);
+		else if(accessQuota>0)
+				state.accessValuePer = 1.0 / accessQuota;
+		state.accessValuePer *= sortTime;
 		sort_(arr, watch);
 		state.token_sort--;
+		state.sorting = false;
+		instanceID++; //Next sort
+		FWK_postSort();
+	}
+	//Sorting without watchlist
+	void sortRaw(ArrayList<int>& arr) {
+		FWK_preSort();
+		state.sorting = true;
+		//state.token_sort();
+		FWK_preCycle();
+		currentSort = this;
+		state.accessValuePer = 0.0;
+		List<int>* tmp = &arr;
+		sort_(arr, tmp);
+		//state.token_sort--;
+		FWK_postCycle();
 		state.sorting = false;
 		instanceID++; //Next sort
 		FWK_postSort();

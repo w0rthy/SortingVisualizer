@@ -13,7 +13,8 @@ namespace {
 	struct  _ : public ArraySort {
 		_() {
 			name = "Shuffle";
-			accessQuota = 2000;
+			accessFunc = [](int n) {return n * 3; };
+			sortTime = 1.0;
 		}
 		void sort(ArrayList<int>& arr) {
 			shuffleSort(arr, 0, arr.sz);

@@ -20,6 +20,8 @@ struct TokenState {
 	//The next token in the system
 	TokenState* nxt = nullptr;
 	
+	//Funciton to determine whether or not this TokenState should be given a turn when it has intent (true) or skipped (false)
+	function<bool()> intentFunc;
 	//Function to run when a token is received (action begins)
 	function<void()> onActionBegin;
 	//Function to run when a token is forfeited (action ends)
@@ -68,7 +70,7 @@ struct TokenState {
 				auto tmp = nxt;
 				bool success = false;
 				while (tmp != nullptr && tmp != this) {
-					if (tmp->intent) {
+					if (tmp->intent && (!tmp->intentFunc || tmp->intentFunc())) {
 						if (tmp->onActionBegin)
 							tmp->onActionBegin();
 						tmp->action = true;
@@ -95,7 +97,7 @@ struct TokenState {
 				auto tmp = nxt;
 				bool success = false;
 				while (tmp != nullptr && tmp != this) {
-					if (tmp->intent) {
+					if (tmp->intent && (!tmp->intentFunc || tmp->intentFunc())) {
 						if (tmp->onActionBegin)
 							tmp->onActionBegin();
 						tmp->action = true;

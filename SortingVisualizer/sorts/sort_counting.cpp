@@ -2,7 +2,7 @@
 #include "sorts_util.h"
 
 //For visual clarity
-#define AUX_HEIGHT_DIV 10
+#define AUX_HEIGHT_DIV 1
 
 void countingSort(ArrayList<int>& arr, int l, int h) {
 	int max = analyzeMax(arr, l, h);
@@ -21,14 +21,14 @@ void countingSort(ArrayList<int>& arr, int l, int h) {
 
 	//Fill the accumulator
 	for (int i = l; i < h; i++) {
-		accumulator[arr[i] - 1]+=sz/AUX_HEIGHT_DIV;
+		accumulator[arr[i] - 1]+=1;
 	}
 
 	//Writeback
 	int tmp;
 	int off = 0;
 	for (int i = 1; i <= max && off < sz; i++) {
-		tmp = accumulator[i - 1]/(sz/AUX_HEIGHT_DIV);
+		tmp = accumulator[i - 1];
 		for (int j = 0; j < tmp; j++)
 			arr[l + off + j] = i;
 		off += tmp;
