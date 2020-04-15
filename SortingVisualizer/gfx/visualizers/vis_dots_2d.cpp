@@ -8,7 +8,7 @@
 namespace {
 	struct _ : public Visualizer {
 		_() {
-			name = "Dots (2D) Visualizer";
+			name = "Numbers Visualizer";
 		}
 
 		float maxDepth = 1.f;
@@ -33,12 +33,14 @@ namespace {
 		bool drawList(VisualizerListInfo* inf, List<int>* l, int depthInd, int depth) { return depth < maxDepth; }
 
 		void drawElement(VisualizerListInfo* inf, List<int>* l, int depthInd, ListElement<int>* e, int pos, int depth, bool marked) {
-			float height = (float)e->val / inf->realSize * 1.98f / maxDepth;
-			float x = ((float)l->offset + (float)pos) / inf->realSize * 1.98f - 1.f;
-			float y = -1.f + (float)depth / maxDepth * 1.98f + height;
-			vec4 col = marked ? vec4(0.f, 0.f, 0.f, 1.f) : colHSV((float)e->val / inf->realSize, 1.f, 1.f);
-			//drawShape(shape_square, vec3(x, y, 0.f), vec3(width, height, 1.f), vec3(), col);
-			drawFontString2DCenteredCorrected(0, std::to_string(e->val), vec3(x, y, 0.f), vec3(0.5f, 0.5f, 0.5f), vec3(), col);
+			int sz = l->sz + l->offset;
+			sz = sz > inf->realSize ? sz : inf->realSize;
+			float height = (float)e->val / inf->realSize * 1.96f / maxDepth;
+			float x = ((float)l->offset + (float)pos) / (float)(sz-1) * 1.96f - 0.98f;
+			float y = -1.f + (float)depth / maxDepth * 1.96f + height;
+			//float y = -0.99f + ((float)depth+0.5f) / maxDepth * 1.98f;
+			vec4 col = marked ? vec4(0.f, 0.f, 0.f, 1.f) : colHSV((float)e->val / sz, 1.f, 1.f);
+			drawFontString2DCenteredCorrected(0, std::to_string(e->val), vec3(x, y, 0.f), vec3(1.f, 1.f, 1.f), vec3(), col);
 		}
 	}_;
 }

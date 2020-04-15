@@ -117,15 +117,10 @@ static int aud_synthesize(const void* bufferIn, void* bufferOut, unsigned long b
 
 	int numstreams = sz < AUD_MAX_VIRTUAL_STREAMS ? sz : AUD_MAX_VIRTUAL_STREAMS;
 
-	if (count > 0)
-		sz += numstreams;
-
 	float mul = aud_volume / (float)numstreams;
 
 	float bigstep = ceilf((float)(sz-numstreams) / (float)numstreams) / (float)bufferSz;
 	float smlstep = floorf((float)(sz-numstreams) / (float)numstreams) / (float)bufferSz;
-
-	
 
 	int stepdet = sz % AUD_MAX_VIRTUAL_STREAMS; //If stream is >= to step determinate then it uses small step
 
@@ -168,9 +163,16 @@ static int aud_synthesize(const void* bufferIn, void* bufferOut, unsigned long b
 				t -= 1.f;
 		}
 #if AUD_USE_NOISE_REDUCTION
-		* out++ *= aud_volume / mulsum;
+		*out++ *= aud_volume / mulsum;
 #else
-		*out++ *= mul;
+		//* out *= mul;
+		//*out = tanh(*out*aud_volume)*aud_volume;
+		* out *= 0.2 * aud_volume;
+		if (*out > 1.0)
+			*out = 1.0;
+		else if (*out < -1.0)
+			*out = -1.0;
+		out++;
 #endif
 		bigpos += bigstep;
 		bigbias = bigpos - (float)(int)bigpos;

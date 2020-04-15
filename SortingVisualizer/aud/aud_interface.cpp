@@ -42,6 +42,9 @@ void playSound(int val) {
 	//Rebuild pitch table if necessary
 	rebuildPitchTable();
 
+	if (val >= pitchArraySz)
+		return;
+
 	playFreq(pitchArray[val]);
 	//playFreq(400.f + (float)val / (float)watchListSize * 2000.f);
 }

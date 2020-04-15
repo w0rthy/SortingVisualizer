@@ -20,7 +20,7 @@ struct TokenState {
 	//The next token in the system
 	TokenState* nxt = nullptr;
 	
-	//Funciton to determine whether or not this TokenState should be given a turn when it has intent (true) or skipped (false)
+	//Function to determine whether or not this TokenState should be given a turn when it has intent (true) or skipped (false)
 	function<bool()> intentFunc;
 	//Function to run when a token is received (action begins)
 	function<void()> onActionBegin;

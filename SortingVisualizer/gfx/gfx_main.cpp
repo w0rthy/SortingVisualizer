@@ -53,7 +53,7 @@ void gfx_init(int w, int h, string title) {
 	
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
+	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);

@@ -55,8 +55,7 @@ struct Visualizer {
 
 	//Determines if an element should be considered marked
 	virtual bool elementIsMarked(VisualizerListInfo* inf, List<int>* l, int depthInd, ListElement<int>* e, int pos, int depth) {
-		//return (state.sorting && e->lastAccess > 0 && (threadStates[e->lastThread].accessCount - e->lastAccess) < (inf->totalSize/100));
-		return (e->lastInstanceID == instanceID && (threadStates[e->lastThread].accessCount - e->lastAccess) < (inf->totalSize / 100));
+		return (e->lastInstanceID == instanceID && (threadStates[e->lastThread].accessCount - e->lastAccess) < ((int)pow(10.0/3.0,log10(inf->totalSize)-1.0)));
 	}
 
 	//Function to draw an element
