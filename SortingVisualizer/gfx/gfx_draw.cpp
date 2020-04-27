@@ -5,6 +5,7 @@
 #include "../fwk/fwk_sort.h"
 
 vector<int> depthIndices;
+vector<int> depthSizes;
 
 bool gfx_drawList(VisualizerListInfo* inf, List<int>* list, int depth = 0) {
 	int depthInd = depthIndices[depth]; //Pending depth index
@@ -14,6 +15,9 @@ bool gfx_drawList(VisualizerListInfo* inf, List<int>* list, int depth = 0) {
 	
 	depthIndices[depth]++; //Take the index
 
+	int off_err = depthSizes[depth]-list->offset;
+	if (off_err > 0)
+		list->offset += off_err;
 	int i = 0;
 	ListElement<int>* prev = nullptr;
 	list->iterate([&](ListElement<int>& e) {
@@ -25,6 +29,9 @@ bool gfx_drawList(VisualizerListInfo* inf, List<int>* list, int depth = 0) {
 		}
 		i++;
 		});
+	if (off_err > 0)
+		list->offset -= off_err;
+	depthSizes[depth] += i;
 
 	list->iterateChildren([&](ListContext<int>& c) {
 		int childDepthInd = depthIndices[depth + 1]; //depth ind if child is drawn
@@ -73,6 +80,14 @@ void gfx_drawStatus(VisualizerListInfo* inf) {
 	drawFontString2DCorrected(0, text, pos);
 	pos[1] -= vgap;
 
+	text = "Access Function: " + (currentSort?currentSort->accessFuncStr:std::string());
+	drawFontString2DCorrected(0, text, pos);
+	pos[1] -= vgap;
+
+	text = "Rank: " + (currentSort?(currentSort->ranked?std::to_string(currentSortRank + 1):std::string("Unranked")):std::string("None")) + " of " + std::to_string(profilerRanking.size());
+	drawFontString2DCorrected(0, text, pos);
+	pos[1] -= vgap;
+
 	text = "Accesses: " + getNumString(state.accessCount);
 	drawFontString2DCorrected(0, text, pos);
 	pos[1] -= vgap;
@@ -95,6 +110,8 @@ void gfx_drawFrame() {
 
 	depthIndices.clear();
 	depthIndices.resize(inf.maxDepth,0);
+	depthSizes.clear();
+	depthSizes.resize(inf.maxDepth,0);
 
 	gfx_drawList(&inf, watchList);
 

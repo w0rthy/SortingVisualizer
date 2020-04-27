@@ -1,6 +1,8 @@
 #include "pofiler.h"
 #include "../other/matrix.h"
 #include "../sorts/sorts.h"
+#include <sstream>
+#include <iomanip>
 
 constexpr int testsPer = 10;
 constexpr int testSizes[] = { 1,10,20,30,40,50,60,70,80,90,100 };
@@ -12,8 +14,12 @@ function<double(double)> terms[] = {
 	[&](double n) {return n * log2(n); },
 	[&](double n) {return n * n; }
 };
+const char* termStr[] = {"","logn","n","nlogn","n^2"};
 constexpr int termNum = sizeof(terms) / sizeof(*terms);
 constexpr double termThresh = 0.2;
+
+//Number of elements for which to calculate the ranking
+vector<Sort*> profilerRanking;
 
 bool ready = false;
 Matrix profileMat;
@@ -77,10 +83,36 @@ profileFunc profileSort(Sort* sort) {
 		}
 	}
 
-	return [&, result](int n) {
+	profileFunc func = [&, result](int n) {
 		double sum = 0.0;
 		for (int i = 0; i < termNum; i++)
 			sum += result.mat[i][0] * terms[i]((double)n);
 		return (int)sum;
 	};
+
+	std::stringstream funcsstr;
+	int count = 0;
+	for (int i = termNum-1; i >= 0; i--) {
+		double term = result.mat[i][0];
+		if (term > 0.0) {
+			if (count)
+				funcsstr << " + ";
+			funcsstr << std::fixed << std::setprecision(2) << term;
+			funcsstr << termStr[i];
+			count++;
+		}
+	}
+	sort->accessFuncStr = funcsstr.str();
+
+	//Update rankings
+	if (sort->ranked) {
+		int tmp = func(profilerRankN);
+		auto pos = std::find_if(profilerRanking.begin(), profilerRanking.end(), [&](Sort* a) {return a == sort; });
+		if (pos != profilerRanking.end())
+			profilerRanking.erase(pos);
+		auto ins = std::find_if(profilerRanking.begin(), profilerRanking.end(), [&](Sort* a) {return a->accessFunc(profilerRankN) >= tmp; });
+		profilerRanking.insert(ins, sort);
+	}
+
+	return func;
 }

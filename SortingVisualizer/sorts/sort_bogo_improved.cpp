@@ -24,7 +24,7 @@ namespace {
 	struct  _ : public ArraySort {
 		_() {
 			name = "Improved Bogo Sort";
-			accessQuota = 500000000;
+			accessQuota = 78000;
 
 			profiled = false;
 		}

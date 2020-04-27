@@ -11,7 +11,8 @@ extern Visualizer* visualizer_galaxy_spiral;
 extern Visualizer* visualizer_tunnel;
 extern Visualizer* visualizer_tree;
 extern Visualizer* visualizer_disparity_dots_2d;
-extern Visualizer* visualizer_dots_2d;
+extern Visualizer* visualizer_numbers;
 extern Visualizer* visualizer_sphere_agitation;
+extern Visualizer* visualizer_2d_composite;
 
 #endif

@@ -16,6 +16,7 @@ struct VisualizerListInfo {
 	//Vector containing the number of lists at each depth
 	//TODO??: Convert this to contain pointers to the lists at each depth sorted by offset
 	vector<int> depthWidth = { 0 };
+	vector<int> depthSize = { 0 };
 	//TODO: A way to uniquely id/number each list that has ever existed for this sort
 
 };

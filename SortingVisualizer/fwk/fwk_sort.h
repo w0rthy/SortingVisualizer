@@ -21,6 +21,7 @@ struct Sort;
 
 //The current/last running sort
 extern Sort* currentSort;
+extern int currentSortRank;
 
 extern vector<Sort*> sorts;
 
@@ -36,7 +37,9 @@ struct Sort {
 
 	//Whether this sort should be profiled (false for really bad ones)
 	bool profiled = true;
+	bool ranked = true;
 	profileFunc accessFunc;
+	string accessFuncStr;
 	float sortTime = 10.f;
 
 	//How many accesses per second the algorithm should be allowed (Determines speed)
@@ -58,6 +61,7 @@ public:
 		state.sorting = true;
 		state.token_sort();
 		currentSort = this;
+		currentSortRank = std::find(profilerRanking.begin(), profilerRanking.end(), this)-profilerRanking.begin();
 		if (profiled)
 			state.accessValuePer = 1.0 / (double)accessFunc(arr.sz);
 		else if(accessQuota>0)

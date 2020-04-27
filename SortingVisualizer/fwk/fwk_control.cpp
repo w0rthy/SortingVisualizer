@@ -79,6 +79,13 @@ void parseCommand(string& s) {
 
 //Routine for the control thread
 void controlFunc() {
+	for (Sort* s : sorts)
+		if (s->profiled && !s->accessFunc)
+			s->accessFunc = profileSort(s);
+	currentSort = nullptr;
+	state.accessCount = 0;
+	state.accessValuePer = 0.0;
+
 	string str;
 	while (true) {
 		std::getline(std::cin, str);
@@ -404,7 +411,7 @@ struct DemoPair {
 	Visualizer* vis;
 };
 
-#define DEMOVIS visualizer_dots_2d
+#define DEMOVIS visualizer_2d_composite
 
 //Need to implement a better solution for this
 vector<DemoPair> demos = {
@@ -424,8 +431,8 @@ vector<DemoPair> demos = {
 	{sort_bwradix_msd,DEMOVIS},
 	{sort_bwradix_msd_inplace,DEMOVIS},
 	{sort_bwradix_lsd,DEMOVIS},
-	{sort_bwradix_lsd_inplace,DEMOVIS},
-	{sort_bogo_improved,DEMOVIS}
+	{sort_bwradix_lsd_inplace,DEMOVIS}
+	//{sort_bogo_improved,DEMOVIS}
 };
 
 #undef DEMOVIS
@@ -466,6 +473,23 @@ void cmd_demo(vector<string>& args) {
 	}
 }
 
+void cmd_sdemo(vector<string>& args) {
+	auto demos_ = demos;
+	std::sort(demos_.begin(), demos_.end(), [&](const DemoPair& a, const DemoPair& b) {return a.sort->accessFunc(profilerRankN) >= b.sort->accessFunc(profilerRankN); });
+	for (auto& d : demos_) {
+		if (currentVisualizer != d.vis) {
+			requestVisualizer = d.vis;
+			sleep(1500);
+		}
+		runSort(sort_shuffle);
+		sleep(1000);
+		if (d.sort == sort_bogo_improved)
+			state.accessValueMul = 1.0;
+		runSort(d.sort);
+		sleep(1500);
+	}
+}
+
 #else
 
 void cmd_demo(vector<string>& args) {
@@ -493,6 +517,7 @@ namespace {
 			Command("mixwave", cmd_mixwave);
 			Command("vol", cmd_vol);
 			Command("demo", cmd_demo);
+			Command("sdemo", cmd_sdemo);
 		}
 	} _;
 }
