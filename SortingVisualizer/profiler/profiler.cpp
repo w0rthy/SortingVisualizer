@@ -108,10 +108,14 @@ profileFunc profileSort(Sort* sort) {
 	if (sort->ranked) {
 		int tmp = func(profilerRankN);
 		auto pos = std::find_if(profilerRanking.begin(), profilerRanking.end(), [&](Sort* a) {return a == sort; });
-		if (pos != profilerRanking.end())
-			profilerRanking.erase(pos);
-		auto ins = std::find_if(profilerRanking.begin(), profilerRanking.end(), [&](Sort* a) {return a->accessFunc(profilerRankN) >= tmp; });
-		profilerRanking.insert(ins, sort);
+		auto to = std::find_if(profilerRanking.begin(), profilerRanking.end(), [&](Sort* a) {return a != sort && a->accessFunc(profilerRankN) >= tmp; });
+		if (pos == profilerRanking.end())
+			profilerRanking.insert(to, sort);
+		else
+			if (pos < to)
+				std::rotate(pos, pos + 1, to);
+			else
+				std::rotate(to, pos, pos + 1);
 	}
 
 	return func;

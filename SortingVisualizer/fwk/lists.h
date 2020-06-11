@@ -514,6 +514,7 @@ void LinkedList<T>::addBack(LinkedListElement<T>* a) {
 	if (tail)
 		a->moveAfter(tail);
 	else {
+		onAccess(*a);
 		a->extract();
 		a->list = this;
 		this->sz++;
@@ -527,6 +528,7 @@ void LinkedList<T>::addFront(LinkedListElement<T>* a) {
 	if(head)
 		a->moveBefore(head);
 	else {
+		onAccess(*a);
 		a->extract();
 		a->list = this;
 		this->sz++;
@@ -547,6 +549,8 @@ void LinkedList<T>::moveListAfter(LinkedList<T>* l) {
 		return;
 	if (!l->head)
 		l->addBack(head);
+	else
+		onAccess(*l->head);
 	moveListAfter(l->tail);
 }
 
@@ -562,6 +566,8 @@ void LinkedList<T>::moveListBefore(LinkedList<T>* l) {
 		return;
 	if (!l->head)
 		l->addBack(head);
+	else
+		onAccess(*l->head);
 	moveListBefore(l->head);
 }
 
