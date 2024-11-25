@@ -4,6 +4,6 @@
 
 vector<Visualizer*> visualizers;
 
-Visualizer* currentVisualizer = visualizer_basic;
+Visualizer* currentVisualizer = visualizer_2d_composite;
 
 #endif

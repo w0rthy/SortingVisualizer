@@ -5,7 +5,7 @@
 #include "../gfx/gfx_request.h"
 #include "../aud/fwk/aud_fwk_wave.h"
 
-#define INITIAL_SIZE 50
+#define INITIAL_SIZE 1000
 
 //The main array to be used
 ArrayList<int> array(INITIAL_SIZE);
@@ -411,7 +411,7 @@ struct DemoPair {
 	Visualizer* vis;
 };
 
-#define DEMOVIS visualizer_2d_composite
+#define DEMOVIS visualizer_snowflake
 
 //Need to implement a better solution for this
 vector<DemoPair> demos = {
@@ -429,9 +429,9 @@ vector<DemoPair> demos = {
 	{sort_quick,DEMOVIS},
 	{sort_merge_agg_oop,DEMOVIS},
 	{sort_bwradix_msd,DEMOVIS},
-	{sort_bwradix_msd_inplace,DEMOVIS},
+	//{sort_bwradix_msd_inplace,DEMOVIS},
 	{sort_bwradix_lsd,DEMOVIS},
-	{sort_bwradix_lsd_inplace,DEMOVIS}
+	//{sort_bwradix_lsd_inplace,DEMOVIS}
 	//{sort_bogo_improved,DEMOVIS}
 };
 

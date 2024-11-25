@@ -4,15 +4,15 @@
 #include <sstream>
 #include <iomanip>
 
-constexpr int testsPer = 10;
+constexpr int testsPer = 11;
 constexpr int testSizes[] = { 1,10,20,30,40,50,60,70,80,90,100 };
 constexpr int testNum = sizeof(testSizes) / sizeof(*testSizes);
 function<double(double)> terms[] = {
-	[](double n) {return 1.0; },
-	[](double n) {return log2(n); },
-	[](double n) {return n; },
-	[](double n) {return n * log2(n); },
-	[](double n) {return n * n; }
+	[&](double n) {return 1.0; },
+	[&](double n) {return log2(n); },
+	[&](double n) {return n; },
+	[&](double n) {return n * log2(n); },
+	[&](double n) {return n * n; }
 };
 const char* termStr[] = {"","logn","n","nlogn","n^2"};
 constexpr int termNum = sizeof(terms) / sizeof(*terms);
@@ -47,10 +47,11 @@ profileFunc profileSort(Sort* sort) {
 	profile_prepare();
 
 	//Build y vector
+	vector<double> res;
+	res.resize(testsPer);
+
 	Matrix y(testNum, 1);
 	for (int i = 0; i < testNum; i++) {
-		vector<double> res;
-		res.resize(testsPer);
 		auto arr = genArr(testSizes[i]);
 		for (int j = 0; j < testsPer; j++) {
 			sort_shuffle->sortRaw(*arr);

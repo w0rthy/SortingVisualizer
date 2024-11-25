@@ -4,9 +4,9 @@ void shuffleSort(ArrayList<int>& arr, int l, int h) {
 	//srand(time(0)); //Temporary, should implement a srand() function in common.h that automatically manages the seed
 	int rnd;
 	int sz = h - l;
-	for (int i = l; i < h; i++) {
-		rnd = rand() % sz;
-		arr.swap(i, l + rnd);
+	for (int i = 0; i < sz - 1; i++) {
+		rnd = rand() % (sz-i);
+		arr.swap(l + i, l + i + rnd);
 	}
 }
 

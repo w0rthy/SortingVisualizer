@@ -43,7 +43,12 @@ namespace {
 			float val = (float)e->val / (float)sz;
 			float x = -1.f + 2.f * (float)(l->offset+pos) / (float)sz + w / 2.f;
 			float y = -1.f + 2.f * (float)depth / (float)maxDepth;
-			vec4 col = marked ? vec4(0.f, 0.f, 0.f, 1.f) : colHSV((float)e->val / inf->realSize, 1.f, 1.f);
+			//vec4 col = marked ? vec4(0.f, 0.f, 0.f, 1.f) : colHSV((float)e->val / inf->realSize, 1.f, 1.f);
+			//vec4 col = marked ? vec4(1.f) : colHSV((float)e->val / inf->realSize, 1.f, 1.f);
+			//vec4 col = colHSV((float)e->val / inf->realSize, 1.f, 1.f)*(marked?vec4(0.5f, 0.5f, 0.5f, 1.f):vec4(1.f));
+			//vec4 col = colHSV((float)e->val / inf->realSize, 1.f, 1.f) * (marked ? vec4(1.f) : vec4(0.5f, 0.5f, 0.5f, 1.f));
+			vec4 col = colHSV((float)e->val / inf->realSize, 1.f, 1.f) + (marked ? vec4(2.f) : vec4(0.f));
+			col /= col[3];
 			drawShape(shape_square, vec3(x, y + (h + fh + eh * val) / 2.f, 0.f), vec3(w / 2.f, eh * val, 1.f), vec3(), col);
 			drawShape(shape_square, vec3(x, y + (h - fh - eh * val) / 2.f, 0.f), vec3(w / 2.f, eh * val, 1.f), vec3(), col);
 			drawFontString2DCenteredCorrected(0, std::to_string(e->val), vec3(x, y + h / 2.f , 0.f), vec3(1.f, 1.f, 1.f), vec3(), col);

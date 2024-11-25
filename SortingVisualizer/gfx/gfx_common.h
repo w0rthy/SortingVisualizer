@@ -12,6 +12,7 @@ using vec2 = glm::vec2;
 using vec3 = glm::vec3;
 using vec4 = glm::vec4;
 using mat3 = glm::mat3;
+struct mat4;
 
 //Denotes an undefined normal
 #define NONORMAL vec3(FLT_MAX,FLT_MAX,FLT_MAX)
@@ -76,13 +77,18 @@ struct vertexVector : public vector<vertex> {
 		for (int i = 0; i < 3; i++)
 			at(sz + i).normal *= -1.f;
 	}
+
+	inline void setColor(const vec4& col) {
+		for (auto& v : *this) {
+			v.color = col;
+		}
+	}
+
+	void mutate(mat4& mat);
 };
 
 struct mat4 : public glm::mat4 {
-	//using glm::mat4::mat4;
-
-	mat4(const glm::mat4& a) : glm::mat4(a) {}
-	mat4(glm::mat4&& a) : glm::mat4(a) {}
+	using glm::mat4::mat4;
 
 	//Convenience
 	inline operator GLfloat* () {
@@ -91,6 +97,7 @@ struct mat4 : public glm::mat4 {
 
 	vertexVector operator*(vertexVector& vvec) {
 		vertexVector tmp;
+		tmp.reserve(vvec.size());
 		mat3 normMat = glm::transpose(glm::inverse((mat3)*this));
 		
 		for (auto& v : vvec)

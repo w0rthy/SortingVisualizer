@@ -61,7 +61,7 @@ public:
 		state.sorting = true;
 		state.token_sort();
 		currentSort = this;
-		currentSortRank = std::find(profilerRanking.begin(), profilerRanking.end(), this)-profilerRanking.begin();
+		currentSortRank = (int)(std::find(profilerRanking.begin(), profilerRanking.end(), this)-profilerRanking.begin());
 		if (profiled)
 			state.accessValuePer = 1.0 / (double)accessFunc(arr.sz);
 		else if(accessQuota>0)
