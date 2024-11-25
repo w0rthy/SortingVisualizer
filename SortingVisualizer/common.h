@@ -1,4 +1,6 @@
 #pragma once
+#include <thread>
+#include <cmath>
 #include <vector>
 #include <string>
 #include <mutex>
@@ -27,10 +29,6 @@ struct string : public std::string {
 
 	inline operator const char* () {
 		return std::string::c_str();
-	}
-	inline string& operator=(const std::string& s) {
-		assign(s.c_str());
-		return *this;
 	}
 };
 

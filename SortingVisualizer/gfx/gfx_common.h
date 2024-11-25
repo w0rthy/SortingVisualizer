@@ -79,7 +79,10 @@ struct vertexVector : public vector<vertex> {
 };
 
 struct mat4 : public glm::mat4 {
-	using glm::mat4::mat4;
+	//using glm::mat4::mat4;
+
+	mat4(const glm::mat4& a) : glm::mat4(a) {}
+	mat4(glm::mat4&& a) : glm::mat4(a) {}
 
 	//Convenience
 	inline operator GLfloat* () {
