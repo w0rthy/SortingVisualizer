@@ -5,7 +5,7 @@
 #include "../gfx/gfx_request.h"
 #include "../aud/fwk/aud_fwk_wave.h"
 
-#define INITIAL_SIZE 1000
+#define INITIAL_SIZE 50
 
 //The main array to be used
 ArrayList<int> array(INITIAL_SIZE);
